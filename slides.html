@@ -57,7 +57,7 @@
 	  </article>
 
       <article class="">
-        <h3>Constructor Pattern</h3>
+        <h3>Constructor Pattern - Simple Objects</h3>
         <section>
         <pre>
 // for simple object creation, just use the object literal syntax
@@ -82,7 +82,7 @@ person2.hello(); // "Katherine"
 	  </article>
 	  
       <article class="smaller">
-        <h3>Constructor Pattern (cont)</h3>
+        <h3>Constructor Pattern - Simple Example</h3>
         <section>
         <pre>
 // constructor function
@@ -112,7 +112,7 @@ person3.hello(); // "John Doe"
 	  </article>
 
       <article class="smaller">
-        <h3>Constructor Pattern (cont)</h3>
+        <h3>Constructor Pattern - Use of Prototype</h3>
         <section>
         <pre>
 // constructor function
@@ -143,7 +143,7 @@ person3.hello(); // "John Doe"
 	  </article>
 	  
       <article class="smaller">
-        <h3>Constructor Pattern (cont)</h3>
+        <h3>Constructor Pattern - Return Any Object</h3>
         <section>
         <pre>
 // constructor function
@@ -175,7 +175,7 @@ person3.hello(); // "John Doe"
 	  </article>
 	  
       <article class="smaller">
-        <h3>Constructor Pattern (cont)</h3>
+        <h3>Constructor Pattern - Practical Application</h3>
         <section>
         <pre>
 // constructor function
@@ -203,7 +203,7 @@ count2.down();
 count2.value(); // 11
 
 // we do not have access to "num"
-console.log( count1.num ); // "undefined"
+count1.num; // "undefined"
 </pre>
         </section>
 	  </article>
@@ -317,33 +317,103 @@ var status2 = new MYAPP.widgets.StatusBar("#status", "low", "Someone updated Twi
 		<h1>Currying</h1>
 		<p>Pattern 3</p>
 	  </article>
+	  
+	  <article>
+		<h3>Currying</h3>
+		<ul>
+			<li>Think: "replace values in a function to return a new function"
+			<li>Demonstrates the functional power of javascript
+			<li>Con: not used very often in practice
+		</ul>
+	  </article>
 
       <article class="smaller">
-        <h3>Currying - Example 1</h3>
+        <h3>Currying - Concept</h3>
+        <section>
+			<img src="img/curry.jpg" style="padding-top: 20px; width: 65%" />
+        </section>
+	  </article>
+	  
+      <article class="smaller">
+        <h3>Currying - Simple Example</h3>
         <section>
         <pre>
-// numbers
-var num1 = 96;
-var num2 = 2.5;
-var num3 = 1e3; // 1000
+var add = function(x, y) {
+  // if they did not pass in a value for "y",
+  // return a function with x already applied
+  if (typeof y === 'undefined') {
+    return function(y) {
+      return x + y;
+    };
+  }
+  
+  // else return the full function
+  return x + y;
+};
 
-if (1 === 1.0) { // true
-  console.log('every number is a 64-bit floating point');
-}
+add(2, 3); // 5
 
-if (1000 === num3) { // true
-  console.log('one thousand');
-}
+var partial_fn = add(2);
+partial_fn(3); // 5
 
-// beware of floating point operations in JavaScript
-if (0.1 + 0.2 === 0.3) { // false
-  console.log('Pigs are flying.');
-}
+add(2)(3); // 5 (same thing)
+</pre>
+        </section>
+	  </article>	  
 
-// convert to integers if needed
-if (0.1 * 1000 + 0.2 * 1000 === 0.3 * 1000) { // true
-  console.log('Integers are generally safe.');
-}
+      <article class="">
+        <h3>Currying - General Purpose</h3>
+        <section>
+        <pre>
+var curry = function(fn) {
+  // convert "arguments" into an array and save it in a closure
+  var stored_args = Array.prototype.slice.call(arguments, 1);
+  
+  // return a new function
+  return function() {
+    // new arguments for this function
+    var new_args = Array.prototype.slice.call(arguments);
+	
+    // concatenate stored args from closure with new args
+    var combined_args = stored_args.concat(new_args);
+	
+    // return the function executed with stored arguments
+    // and new arguments
+    return fn.apply(null, combined_args);
+  };
+};
+</pre>
+        </section>
+	  </article>
+
+      <article class="smaller">
+        <h3>Currying - Application</h3>
+        <section>
+        <pre>
+// NOTE: assume the "curry" function from the last slide
+var add = function(x, y) {
+  return x + y;
+};
+
+// create a new function "add5", which is the "add" function
+// with the value of "x" set at 5
+var add5 = curry(add, 5);
+
+add5(2); // 7
+add5(4); // 9
+
+var multiply_and_add = function(a, b, c, d) {
+  return a * (b + c + d);
+};
+
+var triple = curry(multiply_and_add, 3);
+var by_ten = curry(multiply_and_add, 10);
+
+triple(1, 1, 1); // 9
+by_ten(1, 2, 2); // 50
+
+// NOTE: use currying when you find yourself calling the same function
+//       and passing mostly the same parameters
 </pre>
         </section>
 	  </article>
@@ -419,46 +489,12 @@ console.log( str1.substr(3, 2) ); // "lo"
 // NOTE: JavaScript does not have chars, only strings
 </pre>
         </section>
-      </article>		  
-	  
-	  <article>
-		<h1>Constructor Pattern</h1>
-		<p>Pattern 2</p>
-	  </article>
-	  
-	  <article class="smaller">
-		<h3>Constructor Pattern</h3>
-		<ul>
-			<li>Use to create objects
-			<li>Easily create "public" and "private" methods
-			<li>Sandbox execution scope
-		</ul>
-	  </article>
-	  
-	  <article>
-		<h1>Module Pattern</h1>
-		<p>Pattern 3</p>
-	  </article>
-	  
-	  <article class="smaller">
-		<h3>Module Pattern</h3>
-		<ul>
-			<li>Help to organize code
-			<li>Easily create "public" and "private" methods
-			<li>Sandbox execution scope
-		</ul>
-	  </article>
+      </article>
 	  
       <article class="smaller">
         <h3>Further Reading</h3>
         <ul>
-          <li><img src="img/good_parts.jpg" alt="JavaScript: The Good Parts" style="vertical-align: middle" /> <a href="http://www.amazon.com/gp/product/0596517742/ref=as_li_ss_tl?ie=UTF8&amp;tag=oakmaccom-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0596517742" target="_blank">JavaScript: The Good Parts</a>
-		  <li><img src="img/good_parts.jpg" alt="JavaScript: The Good Parts" style="vertical-align: middle" /> <a href="http://www.amazon.com/gp/product/0596517742/ref=as_li_ss_tl?ie=UTF8&amp;tag=oakmaccom-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0596517742" target="_blank">JavaScript: The Good Parts</a> (read it twice)
-		  <li><img src="img/js_patterns.jpg" alt="JavaScript Patterns" style="vertical-align: middle" /> <a href="http://www.amazon.com/gp/product/0596806752/ref=as_li_ss_tl?ie=UTF8&amp;tag=oakmaccom-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0596806752" target="_blank">JavaScript Patterns</a>
-		  <li><a href="http://www.html5rocks.com/en/tutorials/internals/howbrowserswork/" target="_blank">How Browsers Work</a>
-		  <li><a href="http://google-styleguide.googlecode.com/svn/trunk/javascriptguide.xml" target="_blank">Google JavaScript Style Guide</a>
-		  <li><a href="http://developer.yahoo.com/performance/" target="_blank">Yahoo! Exceptional Performance Team</a>
-		  <li><a href="http://www.youtube.com/watch?v=WxmcDoAxdoY" target="_blank">Paul Irish - Primitives of HTML5</a>
+		  <li><img src="img/js_patterns.jpg" alt="JavaScript Patterns" style="vertical-align: middle" /> <a href="http://www.amazon.com/gp/product/0596806752/ref=as_li_ss_tl?ie=UTF8&amp;tag=oakmaccom-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0596806752" target="_blank">JavaScript Patterns</a> by Stoyan Stefanov
         </ul>
 	  </article>
 	  
@@ -468,11 +504,9 @@ console.log( str1.substr(3, 2) ); // "lo"
           <br />
           <a href="mailto:chris@oakmac.com">chris@oakmac.com</a>
 		  <br />
-		  <a href="https://github.com/oakmac/Professional-JavaScript">https://github.com/oakmac/Professional-JavaScript</a>
-		  <br />
-		  Available for consulting
+		  <a href="https://github.com/oakmac/JavaScript-Patterns">https://github.com/oakmac/JavaScript-Patterns</a>
         </p>
-		<div style="position: absolute; bottom: 40px">P.S. Play poker in Houston?  email me :)</div>
+		<div style="position: absolute; bottom: 40px">P.S. I'm looking for work!  email me :)</div>
       </article>
 
     </section>
