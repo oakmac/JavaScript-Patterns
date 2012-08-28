@@ -36,7 +36,9 @@
           <li>Constructor Pattern
           <li>Module Pattern
 		  <li>Currying
+		  <!--
           <li>Grid Systems (bonus pattern!)
+		  -->
 		  <li>Q&amp;A
         </ul>
       </article>
@@ -222,10 +224,12 @@ count1.num; // "undefined"
 		</ul>
 	  </article>	  
 
-      <article class="">
+      <article class="smaller">
         <h3>Module Pattern - The Basics</h3>
         <section>
         <pre>
+// util.js
+
 // put the module in a namespace
 MYAPP = MYAPP || {};
 
@@ -242,6 +246,11 @@ MYAPP.util = (function() {
   };
 
 }()); // execute anonymous function
+</pre>
+<pre>
+// page.js
+MYAPP.util.inArray(arr, "foo");
+MYAPP.util.isArray(arr);
 </pre>
         </section>
 	  </article>
@@ -307,8 +316,8 @@ MYAPP.widgets = (function() {
 
 <pre>
 // page.js
-var status1 = new MYAPP.widgets.StatusBar("#status", "high", "Low Disk Space!");
-var status2 = new MYAPP.widgets.StatusBar("#status", "low", "Someone updated Twitter.");
+var bar1 = new MYAPP.widgets.StatusBar("#status", "high", "Low Disk Space!");
+var bar2 = new MYAPP.widgets.StatusBar("#status", "low", "Someone updated Twitter.");
 </pre>
         </section>
 	  </article>
@@ -351,12 +360,15 @@ var add = function(x, y) {
   return x + y;
 };
 
+// full application
 add(2, 3); // 5
 
+// partial application
 var partial_fn = add(2);
 partial_fn(3); // 5
 
-add(2)(3); // 5 (same thing)
+// partial application (different syntax)
+add(2)(3); // 5
 </pre>
         </section>
 	  </article>	  
@@ -398,7 +410,6 @@ var add = function(x, y) {
 // create a new function "add5", which is the "add" function
 // with the value of "x" set at 5
 var add5 = curry(add, 5);
-
 add5(2); // 7
 add5(4); // 9
 
@@ -408,88 +419,18 @@ var multiply_and_add = function(a, b, c, d) {
 
 var triple = curry(multiply_and_add, 3);
 var by_ten = curry(multiply_and_add, 10);
-
 triple(1, 1, 1); // 9
 by_ten(1, 2, 2); // 50
+
+curry(multiply_and_add, 1)(2, 3, 4); // 9
+curry(multiply_and_add, 1, 2)(3, 4); // 9
+curry(multiply_and_add, 1, 2, 3)(4); // 9
 
 // NOTE: use currying when you find yourself calling the same function
 //       and passing mostly the same parameters
 </pre>
         </section>
 	  </article>
-
-	  <article>
-		<h1>Grid Systems</h1>
-		<p>Bonus Pattern!</p>
-	  </article>
-	  
-	  <article>
-		<h3>Currying</h3>
-		<p>The simple types in JavaScript are:</p>
-		<ul>
-			<li>Numbers
-			<li>Strings
-			<li>Boolean
-			<li>null
-			<li>undefined
-		</ul>
-	  </article>
-	  
-      <article class="smaller">
-        <h3>Currying - Example 1</h3>
-        <section>
-        <pre>
-// numbers
-var num1 = 96;
-var num2 = 2.5;
-var num3 = 1e3; // 1000
-
-if (1 === 1.0) { // true
-  console.log('every number is a 64-bit floating point');
-}
-
-if (1000 === num3) { // true
-  console.log('one thousand');
-}
-
-// beware of floating point operations in JavaScript
-if (0.1 + 0.2 === 0.3) { // false
-  console.log('Pigs are flying.');
-}
-
-// convert to integers if needed
-if (0.1 * 1000 + 0.2 * 1000 === 0.3 * 1000) { // true
-  console.log('Integers are generally safe.');
-}
-</pre>
-        </section>
-	  </article>
-	  
-      <article>
-        <h3>Currying - Example 2</h3>
-        <section>
-        <pre>
-// strings
-var str1 = 'Hello';  // single quotes
-var str2 = "world!"; // double quotes
-
-console.log(str1 + ' ' + str2); // "Hello world!"
-
-// strings have a length property
-console.log( str1.length ); // 5
-
-// strings have built-in methods
-console.log( str1.toUpperCase() ); // "HELLO"
-
-console.log( str1.indexOf("e") ); // 1
-console.log( str1.indexOf("z") ); // -1 (z not found)
-
-console.log( str1.substr(3, 2) ); // "lo"
-
-// NOTE: JavaScript does not have chars, only strings
-</pre>
-        </section>
-      </article>
 	  
       <article class="smaller">
         <h3>Further Reading</h3>
