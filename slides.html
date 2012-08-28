@@ -7,7 +7,7 @@
   <style>
 	/* remove the Google logo */
     article {
-		background: #fff !important; /* haha, first time in my life I've used !important */
+		background: #fff !important;
 	}
 	.string {
 		color: #008A35;
@@ -23,37 +23,239 @@
     <section class='slides layout-regular template-default'>
 
       <article>
-        <h1>Professional JavaScript</h1>
+        <h1>JavaScript Patterns</h1>
         <p>Chris Oakman
           <br>
-          March 2012
+          August 2012
         </p>
       </article>
       
       <article>
        <h3>Overview</h3>
         <ul>
-          <li>Part I: JavaScript 101
-          <li>Part II: Tips from the Trenches
-		  <li>Part III: Unsolicited Advice
-          <li>Q&amp;A
+          <li>Constructor Pattern
+          <li>Module Pattern
+		  <li>Currying
+          <li>Grid Systems (bonus pattern!)
+		  <li>Q&amp;A
         </ul>
       </article>
-	  
+
 	  <article>
-		<h3>Goal</h3>
-		<p>The target audience for this talk are people who write JavaScript professionally.</p>
-		<p>My goal is to find the sweet spot between practice and theory.</p>
-		<img src="img/sweet_spot.png" alt="Sweet Spot" class='centered' />
+		<h1>Constructor Pattern</h1>
+		<p>Pattern 1</p>
 	  </article>
 
 	  <article>
-		<h1>JavaScript 101</h1>
-		<p>Part I</p>
+		<h3>Constructor Pattern</h3>
+		<ul>
+			<li>Used to create new objects
+			<li>Allows you to specify custom behavior for your objects
+			<li>Always use with <code class="blue">new</code>
+			<li>By convention should start with a capital letter
+		</ul>
+	  </article>
+
+      <article class="">
+        <h3>Constructor Pattern</h3>
+        <section>
+        <pre>
+// for simple object creation, just use the object literal syntax
+var obj1 = {
+  name  : "Chris",
+  hello : function() {
+    return this.name;
+  }
+};
+
+obj1.hello(); // "Chris"
+
+// but what if we want multiple objects with the same
+// built-in methods?
+var person1 = new Person("Chris");
+var person2 = new Person("Katherine");
+
+person1.hello(); // "Chris"
+person2.hello(); // "Katherine"
+</pre>
+        </section>
+	  </article>
+	  
+      <article class="smaller">
+        <h3>Constructor Pattern (cont)</h3>
+        <section>
+        <pre>
+// constructor function
+// NOTE: always start a constructor function with a capital letter
+var Person = function(name) {
+  // set a default for name
+  this.name = name || "John Doe";
+  
+  // object method
+  this.hello = function() {
+    return this.name;
+  };
+
+  // NOTE: implicit "return this;" when we use the "new" keyword
+};
+
+// create some people
+var person1 = new Person("Chris");
+var person2 = new Person("Katherine");
+var person3 = new Person();
+
+person1.hello(); // "Chris"
+person2.hello(); // "Katherine"
+person3.hello(); // "John Doe"
+</pre>
+        </section>
+	  </article>
+
+      <article class="smaller">
+        <h3>Constructor Pattern (cont)</h3>
+        <section>
+        <pre>
+// constructor function
+// NOTE: always start a constructor function with a capital letter
+var Person = function(name) {
+  // set a default for name
+  this.name = name || "John Doe";
+
+  // NOTE: implicit "return this;" when we use the "new" keyword
+};
+
+// add reusable methods to the Constructor's prototype
+// to reduce memory footprint
+Person.prototype.hello = function() {
+  return this.name;
+};
+
+// create some people
+var person1 = new Person("Chris");
+var person2 = new Person("Katherine");
+var person3 = new Person();
+
+person1.hello(); // "Chris"
+person2.hello(); // "Katherine"
+person3.hello(); // "John Doe"
+</pre>
+        </section>
+	  </article>
+	  
+      <article class="smaller">
+        <h3>Constructor Pattern (cont)</h3>
+        <section>
+        <pre>
+// constructor function
+// NOTE: always start a constructor function with a capital letter
+var Person = function(name) {
+  var that = {};
+  
+  that.name = name || "John Doe";
+  
+  that.hello = function() {
+    return that.name;
+  };
+  
+  // you can return any object from a Constructor function
+  // don't have to use "this"
+  return that;
+};
+
+// create some people
+var person1 = new Person("Chris");
+var person2 = new Person("Katherine");
+var person3 = new Person();
+
+person1.hello(); // "Chris"
+person2.hello(); // "Katherine"
+person3.hello(); // "John Doe"
+</pre>
+        </section>
+	  </article>
+	  
+      <article class="smaller">
+        <h3>Constructor Pattern (cont)</h3>
+        <section>
+        <pre>
+// constructor function
+var Counter = function(num) {
+  num = num || 0;
+  this.up = function() {
+    num++;
+  };
+  this.down = function() {
+    num--;
+  };
+  this.value = function() {
+    return num;
+  }
+};
+
+// create some counters
+var count1 = new Counter();
+var count2 = new Counter(12);
+
+count1.up();
+count1.value(); // 1
+
+count2.down();
+count2.value(); // 11
+
+// we do not have access to "num"
+console.log( count1.num ); // "undefined"
+</pre>
+        </section>
+	  </article>  
+
+	  <article>
+		<h1>Module Pattern</h1>
+		<p>Pattern 2</p>
+	  </article>
+	  
+
+	  <article>
+		<h1>Currying</h1>
+		<p>Pattern 3</p>
+	  </article>
+
+      <article class="smaller">
+        <h3>Currying - Example 1</h3>
+        <section>
+        <pre>
+// numbers
+var num1 = 96;
+var num2 = 2.5;
+var num3 = 1e3; // 1000
+
+if (1 === 1.0) { // true
+  console.log('every number is a 64-bit floating point');
+}
+
+if (1000 === num3) { // true
+  console.log('one thousand');
+}
+
+// beware of floating point operations in JavaScript
+if (0.1 + 0.2 === 0.3) { // false
+  console.log('Pigs are flying.');
+}
+
+// convert to integers if needed
+if (0.1 * 1000 + 0.2 * 1000 === 0.3 * 1000) { // true
+  console.log('Integers are generally safe.');
+}
+</pre>
+        </section>
+	  </article>
+
+	  <article>
+		<h1>Grid Systems</h1>
+		<p>Bonus Pattern!</p>
 	  </article>
 	  
 	  <article>
-		<h3>Lesson 1 - Simple Types</h3>
+		<h3>Currying</h3>
 		<p>The simple types in JavaScript are:</p>
 		<ul>
 			<li>Numbers
@@ -65,7 +267,7 @@
 	  </article>
 	  
       <article class="smaller">
-        <h3>L01E01 - Simple Types: Numbers</h3>
+        <h3>Currying - Example 1</h3>
         <section>
         <pre>
 // numbers
@@ -95,7 +297,7 @@ if (0.1 * 1000 + 0.2 * 1000 === 0.3 * 1000) { // true
 	  </article>
 	  
       <article>
-        <h3>L01E02 - Simple Types: Strings</h3>
+        <h3>Currying - Example 2</h3>
         <section>
         <pre>
 // strings
@@ -120,68 +322,36 @@ console.log( str1.substr(3, 2) ); // "lo"
         </section>
       </article>		  
 	  
-      <article>
-        <h3>L01E03 - Simple Types: Boolean, null, undefined</h3>
-        <section>
-        <pre>
-// boolean
-var yup  = true;
-var nope = false;
-
-// null
-// NOTE: usually you never assign this
-var never = null;
-
-// undefined is lack of assignment
-var huh;
-console.log(huh); // undefined
-</pre>
-        </section>
-      </article>
+	  <article>
+		<h1>Constructor Pattern</h1>
+		<p>Pattern 2</p>
+	  </article>
 	  
 	  <article class="smaller">
-		<h3>Lesson 2 - Objects</h3>
-		<div style="margin-top: 40px">Everything else in JavaScript is an Object.</div>
-		<div class="build">
-			<p style="margin-top: 20px">(yes, everything)</p>
-			<div style="margin-top: 20px">
-				<table>
-				  <tr>
-					<th colspan="2" style="text-align: center; width: 50%">Simple Types
-					<th colspan="2" style="text-align: center; width: 50%">Objects
-				  <tr>
-					<td>Numbers
-					<td><code>9</code>
-					<td>Objects
-					<td><code>{}</code>
-				  <tr>
-					<td>Strings
-					<td><code class="string">"hello"</code>
-					<td>Arrays
-					<td><code>[]</code>
-				  <tr>
-					<td>Boolean
-					<td><code class="blue">true</code>
-					<td>Functions
-					<td><code>function() {}</code>
-				  <tr>
-					<td>null
-					<td><code class="blue">null</code>
-					<td>Regular<br />Expressions
-					<td><code class="string">/foo/i</code>
-				  <tr>
-					<td>undefined
-					<td><code class="blue">undefined</code>
-					<td>
-					<td>
-				</table>
-			</div>
-			<p>Numbers, Strings, and Booleans are object-like.</p>
-		</div><!-- end .build -->
+		<h3>Constructor Pattern</h3>
+		<ul>
+			<li>Use to create objects
+			<li>Easily create "public" and "private" methods
+			<li>Sandbox execution scope
+		</ul>
+	  </article>	  
+	  
+	  <article>
+		<h1>Module Pattern</h1>
+		<p>Pattern 3</p>
+	  </article>
+	  
+	  <article class="smaller">
+		<h3>Module Pattern</h3>
+		<ul>
+			<li>Help to organize code
+			<li>Easily create "public" and "private" methods
+			<li>Sandbox execution scope
+		</ul>
 	  </article>
 	  
       <article class="smaller">
-        <h3>L02E01 - Objects: Basic Syntax</h3>
+        <h3>Module Pattern - Example 1</h3>
         <section>
         <pre>
 // this is an empty object; it has no properties
@@ -210,7 +380,7 @@ console.log(monster.name + " is a " + monster["height-in-m"]
       </article>
 	  
       <article class="smaller">
-        <h3>L02E02 - Objects: Nesting</h3>
+        <h3>Module Pattern - Example 2</h3>
         <section>
         <pre>
 // a property's value can be obtained from any expression,
@@ -233,6 +403,12 @@ console.log(me.name.first + " " + me.name.last); // "Chris Oakman"
 //       more on this when we get into the DOM
 </pre>
         </section>
+	  </article>
+	  
+
+	  <article>
+		<h1>Grid Systems</h1>
+		<p>Bonus Pattern</p>
 	  </article>
 	  
       <article class="smaller">
