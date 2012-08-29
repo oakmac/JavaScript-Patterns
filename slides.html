@@ -279,8 +279,8 @@ MYAPP.api = (function() {
   
   // return these "public" methods
   return {
-    get  : send_get,
-    post : send_post
+    get  : function() { send_get(); },
+    post : function() { send_post(); }
   };
 
 }()); // execute anonymous function
